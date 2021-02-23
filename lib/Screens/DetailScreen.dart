@@ -10,6 +10,8 @@ import 'package:marvel_app/providers/DetailsProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_list/scaled_list.dart';
 
+import '../app_localizations.dart';
+
 class DetailScreen extends StatefulWidget {
   @override
   _DetailScreenState createState() => _DetailScreenState();
@@ -48,9 +50,21 @@ class _DetailScreenState extends State<DetailScreen>
             backgroundColor: Colors.black, // Drawer background
             controller: _controller, // Drawer controller
             drawerItems: <Widget>[
-              Text("Home"),
-              Text("Settings"),
-              Text("Support"),
+              GestureDetector(
+                  onTap:(){
+                    Navigator.of(context).pushNamed("/home");
+                  },
+                  child: Text(AppLocalizations.of(context).translate("home"), style: GoogleFonts.montserrat(),)),
+              GestureDetector(
+                  onTap:(){
+                    Navigator.of(context).pushNamed("/configuration",);
+                  },
+                  child: Text(AppLocalizations.of(context).translate("settings"),style: GoogleFonts.montserrat(),)),
+              GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).pushNamed("/support");
+                  },
+                  child: Text(AppLocalizations.of(context).translate("support"),style: GoogleFonts.montserrat(),)),
             ],
             child: Scaffold(
               backgroundColor: Colors.black,
@@ -81,7 +95,7 @@ class _DetailScreenState extends State<DetailScreen>
                         margin: EdgeInsets.only(top: 20),
                         child: Image.network(
                           list.thumbnail.path + "." + list.thumbnail.extension,
-                          loadingBuilder: (context, child, loadingProgress) {
+                          loadingBuilder:   (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
                             return Container(
                                 width: 100,

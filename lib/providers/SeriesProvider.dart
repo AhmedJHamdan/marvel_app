@@ -13,8 +13,8 @@ class SeriesProvider extends ChangeNotifier {
   int total;
   String _host = "http://gateway.marvel.com";
   String _getCharactersUrl = "/v1/public/series";
-  String _privateKey = "ef0396921b5d865d32c0879ee8d871aa87d77858";
-  String _publicKey = "f8b9eb38a7e5467135610868cb849404";
+  String _privateKey = "7867c5346d5d62e8082c4895da3a142a4535b039";
+  String _publicKey = "618ddfc4faac973d980d5d53ef3d6679";
   String timeStamp = "";
   String hash = "";
   SeriesDataModel seriesDataModel;

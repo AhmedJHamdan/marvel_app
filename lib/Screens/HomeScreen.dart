@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:fancy_drawer/fancy_drawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:marvel_app/app_localizations.dart';
 
 import 'package:marvel_app/models/SeriesDataModel.dart';
 import 'package:marvel_app/providers/SeriesProvider.dart';
@@ -29,13 +31,11 @@ class _HomeScreenState extends State<HomeScreen>
   void onLoading() async {
     await Provider.of<SeriesProvider>(context, listen: false)
         .getMore(_refreshController);
-    print("is loading");
   }
 
   void onRefresh() async {
     await Provider.of<SeriesProvider>(context, listen: false)
         .getFresh(_refreshController);
-    print("is refreshing");
   }
 
   @override
@@ -63,15 +63,26 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    print("build");
     return Material(
       child: FancyDrawerWrapper(
         backgroundColor: Colors.black, // Drawer background
         controller: _controller, // Drawer controller
         drawerItems: <Widget>[
-          Text("Home"),
-          Text("Settings"),
-          Text("Support"),
+          GestureDetector(
+              onTap:(){
+                Navigator.of(context).pushNamed("/home");
+              },
+              child: Text(AppLocalizations.of(context).translate("home"), style: GoogleFonts.montserrat(),)),
+          GestureDetector(
+              onTap:(){
+                Navigator.of(context).pushNamed("/configuration",);
+              },
+              child: Text(AppLocalizations.of(context).translate("settings"),style: GoogleFonts.montserrat(),)),
+          GestureDetector(
+              onTap: (){
+                Navigator.of(context).pushNamed("/support");
+              },
+              child: Text(AppLocalizations.of(context).translate("support"),style: GoogleFonts.montserrat(),)),
         ],
         child: Scaffold(
             backgroundColor: Colors.black,
@@ -106,8 +117,11 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset("assets/loading.gif"),
-                          Text("Loading Your Marvel Heroes")
+                          Container(
+                              width: 200,
+                              height: 200,
+                              child: Image.asset("assets/loading.gif")),
+                          Text(AppLocalizations.of(context).translate("loading_heroes"), style: GoogleFonts.montserrat(),)
                         ],
                       ),
                     );
@@ -169,6 +183,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             child: Text(
                                               series.seriesList[index].title,
                                               textAlign: TextAlign.center,
+                                              style: GoogleFonts.montserrat(),
                                             )))
                                   ],
                                 );
