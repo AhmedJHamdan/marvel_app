@@ -31,7 +31,12 @@ class _DetailScreenState extends State<DetailScreen>
         setState(() {}); // Must call setState
       });
   }
-
+  @override
+  void deactivate() {
+    Provider.of<DetailsProvider>(context, listen: false).clearList();
+    // TODO: implement deactivate
+    super.deactivate();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,150 +52,140 @@ class _DetailScreenState extends State<DetailScreen>
               Text("Settings"),
               Text("Support"),
             ],
-            child: WillPopScope(
-              onWillPop: () async{
-                Provider.of<DetailsProvider>(context).clearList();
-                print("Clearrrrrr");
-                Navigator.of(context).pop();
-                return true;
-
-              },
-              child: Scaffold(
-                backgroundColor: Colors.black,
-                appBar: AppBar(
-                  centerTitle: true,
-
-                  leading: IconButton(
-                    icon: Icon(
-                      Icons.menu,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      _controller.toggle();
-                    },
+            child: Scaffold(
+              backgroundColor: Colors.black,
+              appBar: AppBar(
+                centerTitle: true,
+                leading: IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
                   ),
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  title: Container(
-                      width: 110,
-                      child: Image.asset(
-                        "assets/marvellogo.png",
-                      )),
+                  onPressed: () {
+                    _controller.toggle();
+                  },
                 ),
-                body: Consumer<DetailsProvider>(
-                  builder: (context ,details, child){
-                    return ListView(
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Image.network(
-                            list.thumbnail.path + "." + list.thumbnail.extension,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: Image.asset("assets/loading.gif"));
-                              // You can use LinearProgressIndicator or CircularProgressIndicator instead
-                            },
-                          ),
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                title: Container(
+                    width: 110,
+                    child: Image.asset(
+                      "assets/marvellogo.png",
+                    )),
+              ),
+              body: Consumer<DetailsProvider>(
+                builder: (context ,details, child){
+                  return ListView(
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        child: Image.network(
+                          list.thumbnail.path + "." + list.thumbnail.extension,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Container(
+                                width: 100,
+                                height: 100,
+                                child: Image.asset("assets/loading.gif"));
+                            // You can use LinearProgressIndicator or CircularProgressIndicator instead
+                          },
                         ),
-                        SizedBox(height: 30),
-                        Container(
+                      ),
+                      SizedBox(height: 30),
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          list.title,
+                          style: GoogleFonts.montserrat(
+                              fontSize: 18, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  "Start Year:",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 16, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              Container(
+                                child: Text(
+                                  list.startYear.toString(),
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 16, fontWeight: FontWeight.w300),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  "End Year:",
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 16, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(16),
+                                child: Text(
+                                  list.endYear.toString(),
+                                  style: GoogleFonts.montserrat(
+                                      fontSize: 16, fontWeight: FontWeight.w300),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Container(
                           padding: EdgeInsets.all(16),
                           child: Text(
-                            list.title,
+                            "Creators",
                             style: GoogleFonts.montserrat(
-                                fontSize: 18, fontWeight: FontWeight.w600),
-                          ),
+                                fontSize: 32, fontWeight: FontWeight.w600),
+                          )),
+
+                    FutureBuilder<List<DetailsResult>>(
+                      future: details.getDetails(),
+                        builder:(BuildContext context, AsyncSnapshot<List<DetailsResult>> snapshot){
+                      return ScaledList(itemBuilder: (index, selectedIndex){
+                        final category = details.detailsList[index];
+                        return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                            Container(
+                            height: selectedIndex == index ? 250 : 120,
+                            child: Image.network(category.thumbnail.path+"."+ category.thumbnail.extension),
                         ),
-                        SizedBox(
-                          height: 10,
+                        SizedBox(height: 15),
+                        Text(
+                        category.fullName,
+                        style: GoogleFonts.montserrat(
+                          color: Colors.white,
+                            fontSize: selectedIndex == index ? 25 : 20
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Text(
-                                    "Start Year:",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                Container(
-                                  child: Text(
-                                    list.startYear.toString(),
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 16, fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Text(
-                                    "End Year:",
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 16, fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  child: Text(
-                                    list.endYear.toString(),
-                                    style: GoogleFonts.montserrat(
-                                        fontSize: 16, fontWeight: FontWeight.w300),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Container(
-                            padding: EdgeInsets.all(16),
-                            child: Text(
-                              "Creators",
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 32, fontWeight: FontWeight.w600),
-                            )),
-
-                      FutureBuilder<List<DetailsResult>>(
-                        future: details.getDetails(),
-                          builder:(BuildContext context, AsyncSnapshot<List<DetailsResult>> snapshot){
-                        return ScaledList(itemBuilder: (index, selectedIndex){
-                          final category = details.detailsList[index];
-                          return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                              Container(
-                              height: selectedIndex == index ? 250 : 120,
-                              child: Image.network(category.thumbnail.path+"."+ category.thumbnail.extension),
-                          ),
-                          SizedBox(height: 15),
-                          Text(
-                          category.fullName,
-                          style: GoogleFonts.montserrat(
-                            color: Colors.white,
-                              fontSize: selectedIndex == index ? 25 : 20
-                          ),
-                          )
-                          ]);
-                        },
+                        )
+                        ]);
+                      },
 
 
-                            itemCount: details.detailsList.length, itemColor:(index){return Color(0xFFED1D24);});
-                      })
+                          itemCount: details.detailsList.length, itemColor:(index){return Color(0xFFED1D24);});
+                    })
 
-                      ],
-                    );
-                  },
+                    ],
+                  );
+                },
 
-                ),
               ),
             )));
   }

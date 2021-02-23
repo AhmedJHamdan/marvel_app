@@ -54,11 +54,11 @@ class DetailsProvider extends ChangeNotifier {
     total = detailsDataModel.data.total;
     notifyListeners();
     return detailsList;
+
   }
 
   void clearList(){
     detailsList.clear();
-    notifyListeners();
   }
   void getHash() {
     var content =
