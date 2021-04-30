@@ -34,7 +34,7 @@ dependencies:
   provider:
   dio: ^3.0.9
   crypto: ^2.1.4
-  pull_to_refresh: 1.6.3
+  pull_to_refresh: 1.6.5
   fancy_drawer: ^1.0.0
   google_fonts: ^1.1.2
   scaled_list: ^1.0.1+6
